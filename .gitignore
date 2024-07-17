@@ -1,0 +1,10 @@
+.check
+.conda
+.mamba
+.tools
+.pcks
+.rstats
+run.sh
+mamba/
+data/
+*~
