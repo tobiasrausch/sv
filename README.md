@@ -41,7 +41,7 @@ In this practical we will analyze germline and somatic structural variants (SVs)
 
 ### Structural variant alignment quality control
 
-For the discovery of structural variants, you should first assess the quality of the sequencing data as, for example, local assembly methods suffer from short reads and a high sequencing error rate and read-depth methods by GC-biases or generally uneven coverage. Common quality criteria are the percentage of reads mapped, the duplicate rate, the read-length distribution and the error rate. Popular tools to compute long-read quality control metrics are [NanoPlot](https://github.com/wdecoster/NanoPlot) and [Alfred](https://github.com/tobiasrausch/alfred).
+For the discovery of structural variants, you should first assess the quality of the sequencing data as, for example, local assembly methods suffer from short reads and a high sequencing error rate and read-depth methods from uneven coverage. Common quality criteria are the percentage of reads mapped, the duplicate rate, the read-length distribution and the error rate. Popular tools to compute long-read quality control metrics are [NanoPlot](https://github.com/wdecoster/NanoPlot) and [Alfred](https://github.com/tobiasrausch/alfred).
 
 ```bash
 cd data/lr/
@@ -51,8 +51,8 @@ NanoPlot --bam tumor.bam -o qc_tumor
 cat qc_tumor/NanoStats.txt
 ```
 
-As you can see from the QC results, the data has been downsampled to fairly low coverage to speed up all analyses.
-This implies that some structural variants will have only weak support. In terms of QC interpretation, there are some general things to look out for, such as unexpected high error rates (>4%), less than 80% of reads above Q10, an N50 read length below 10Kbp or unexpected patterns in the read length histogram.
+As you can see from the QC results, the data has been downsampled to fairly low coverage to speed up all analyses in this tutorial.
+This implies that some structural variants will have only weak support. In terms of QC interpretation, there are some general things to watch out for, such as unexpected high error rates (>4%), less than 80% of reads above Q10, an N50 read length below 10Kbp or unexpected patterns in the read length histogram.
  
 #### Exercises
 
@@ -62,7 +62,7 @@ This implies that some structural variants will have only weak support. In terms
 
 ### Germline Structural Variants
 
-Before we dive into structural variant (SV) calling, let's get an idea of how SVs look like in long-read sequencing data. For this I have prepared a [BED file](https://bedtools.readthedocs.io/) with some "simple" germline structural variants like deletions and insertions and one complex example.
+Before we dive into structural variant (SV) calling, let's get an idea of how SVs look like in long-read sequencing data. I have prepared a [BED](https://bedtools.readthedocs.io/) file with some "simple" germline structural variants like deletions and insertions and one complex example.
 
 ```bash
 cat svs.bed
@@ -78,7 +78,7 @@ Once IGV has started use 'File' and 'Load from File' to load the `tumor.bam` and
 You can then easily navigate to the structural variants with 'Regions' and 'Region Navigator'.
 Select a structural variant in the region navigator and click 'View', which will center the IGV alignment view on the selected structural variant.
 You can zoom in and out using the '+' and '-' signs in the toolbar at the top.
-You may also want to visualize clipped reads using the 'View' menu, then click 'Preferences...' and then click the 'Alignments' tab to switch on 'Show soft-clipped reads'. For the last complex SV, you may also want to highlight one specific read named '4190c914-8c3e-413b-88e3-caa07fca2861' which is over 100Kbp long using a right click on tumor.bam and then 'Select by name...'. We will later use that read to visualize this complex region.
+You may also want to visualize clipped reads using the 'View' menu, then click 'Preferences...' and then click the 'Alignments' tab to switch on 'Show soft-clipped reads'. For the last complex SV, you may also want to highlight one specific read named `4190c914-8c3e-413b-88e3-caa07fca2861` which is over 100Kbp long using a right click on tumor.bam and then 'Select by name...'. We will later use that read to visualize this complex region.
 
 #### Exercises
 
