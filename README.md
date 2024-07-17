@@ -78,7 +78,7 @@ Once IGV has started use 'File' and 'Load from File' to load the `tumor.bam` and
 You can then easily navigate to the structural variants with 'Regions' and 'Region Navigator'.
 Select a structural variant in the region navigator and click 'View', which will center the IGV alignment view on the selected structural variant.
 You can zoom in and out using the '+' and '-' signs in the toolbar at the top.
-You may also want to visualize clipped reads using the 'View' menu, then click 'Preferences...' and then click the 'Alignments' tab to switch on 'Show soft-clipped reads'. For the last complex SV, you may also want to highlight one specific read named `4190c914-8c3e-413b-88e3-caa07fca2861` which is over 100Kbp long using a right click on tumor.bam and then 'Select by name...'. We will later use that read to visualize this complex region.
+You may also want to visualize clipped reads using the 'View' menu, then click 'Preferences...' and then click the 'Alignments' tab to switch on 'Show soft-clipped reads'. For the last complex SV, you may also want to highlight one specific read named `4190c914-8c3e-413b-88e3-caa07fca2861` which is over 100Kbp long: Use a right click on `tumor.bam` and then 'Select by name...'. We will later use that read to visualize this complex region.
 
 #### Exercises
 
