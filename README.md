@@ -35,7 +35,7 @@ export PATH=`pwd`/mamba/bin:${PATH}
 
 ## SV Calling
 
-### Discovery of chromothripsis in a cancer sample
+### Reconstructing a derivative chromosome in cancer
 
 In this practical we will analyze germline and somatic structural variants (SVs) of a [tumor cell line](https://www.nist.gov/programs-projects/cancer-genome-bottle) from a pancreatic ductal adenocarcinoma. The data was subsampled and subset to chr1 and chr5 to speed up all subsequent analysis. The tumor genome alignment file is named `tumor.bam` and the control genome alignment file is named `control.bam`.
 
