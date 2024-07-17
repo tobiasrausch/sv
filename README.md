@@ -1,6 +1,6 @@
-[![Docker CI](https://github.com/tobiasrausch/vcLR/workflows/Docker%20CI/badge.svg)](https://hub.docker.com/r/trausch/vcLR/)
-[![GitHub license](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/tobiasrausch/vcLR/blob/master/LICENSE)
-[![GitHub Releases](https://img.shields.io/github/release/tobiasrausch/vcLR.svg)](https://github.com/tobiasrausch/vcLR/releases)
+[![Docker CI](https://github.com/tobiasrausch/sv/workflows/Docker%20CI/badge.svg)](https://hub.docker.com/r/trausch/sv/)
+[![GitHub license](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/tobiasrausch/sv/blob/master/LICENSE)
+[![GitHub Releases](https://img.shields.io/github/release/tobiasrausch/sv.svg)](https://github.com/tobiasrausch/sv/releases)
 
 # Structural variant calling tutorial using long-reads.
 
@@ -14,9 +14,9 @@ Installation of required libraries depends on your linux distribution, e.g., for
 
 Then clone the repository and install all dependencies using mamba:
 
-`git clone --recursive https://github.com/tobiasrausch/vcLR`
+`git clone --recursive https://github.com/tobiasrausch/sv`
 
-`cd vcLR`
+`cd sv`
 
 `make all`
 
