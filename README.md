@@ -26,7 +26,7 @@ ToDo
 
 ## Load the software stack
 
-Load the mamba environment with all required tools
+Load the mamba environment with all required tools.
 
 ```bash
 if [ ! -z ${CONDA_PREFIX+x} ]; then conda deactivate; fi
