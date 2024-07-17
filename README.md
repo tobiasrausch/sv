@@ -173,7 +173,7 @@ wally dotplot ins.fa
 To identify additional Alu candidate insertions, we can for instance filter by size and select insertions with a poly-A tail.
 
 ```bash
-bcftools query -i 'SVTYPE=="INS" && SVLEN>250 && SVLEN<350' -f "%CHROM\t%POS\t%ALT[\t%GT]\n" sv.bcf  | grep "AAAAAAAAAAA"
+bcftools query -i 'SVTYPE=="INS" && SVLEN>250 && SVLEN<350' -f "%CHROM\t%POS\t%ALT\n" sv.bcf  | grep "AAAAAAAAAAA"
 ```
 
 #### Exercises
