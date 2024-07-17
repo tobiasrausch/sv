@@ -78,7 +78,7 @@ Once IGV has started use 'File' and 'Load from File' to load the `tumor.bam` and
 You can then easily navigate to the structural variants with 'Regions' and 'Region Navigator'.
 Select a structural variant in the region navigator and click 'View', which will center the IGV alignment view on the selected structural variant.
 You can zoom in and out using the '+' and '-' signs in the toolbar at the top.
-You may also want to visualize clipped reads using the 'View' menu, then click 'Preferences...' and then click the 'Alignments' tab to switch on 'Show soft-clipped reads'. For the last complex SV, you may also want to highlight one specific read named `4190c914-8c3e-413b-88e3-caa07fca2861` which is over 100Kbp long: Use a right click on `tumor.bam` and then 'Select by name...'. We will later use that read to visualize this complex region.
+You may also want to visualize clipped reads using the 'View' menu, then click 'Preferences...' and then click the 'Alignments' tab to switch on 'Show soft-clipped reads'. For the last complex SV, you may also want to highlight one specific read named `8c0eba99-ad7d-4246-87f0-46177b9946d4` which is over 100Kbp long: Use a right click on `tumor.bam` and then 'Select by name...'. We will later use that read to visualize this complex region.
 
 #### Exercises
 
@@ -101,16 +101,30 @@ Even in germline genomes we can observe complex structural variants or potential
 cat svs.bed | grep "complex"
 ```
 
-In IGV, we already saw that a very long read named '4190c914-8c3e-413b-88e3-caa07fca2861' maps to that region. Let's do a dotplot of that read againt the reference region using [wally](https://github.com/tobiasrausch/wally).
+In IGV, we already saw that a very long read named `8c0eba99-ad7d-4246-87f0-46177b9946d4` maps to that region.
+Let's do a dotplot of that read against the reference region using [wally](https://github.com/tobiasrausch/wally).
 
 ```bash
-wally dotplot -g genome.fa -r 4190c914-8c3e-413b-88e3-caa07fca2861 -e chr1:16500000-16650000 tumor.bam
+wally dotplot -g genome.fa -r 8c0eba99-ad7d-4246-87f0-46177b9946d4 -e chr1:16500000-16600000 tumor.bam
+```
+
+This dotplot suggests a repeat expansion relative to GRCh38.
+
+#### Exercises
+
+* The [UCSC genome browser](https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg38&position=chr1%3A16500000%2D16650000) suggests that there is already a patch of the reference for this area of the genome, called chr1_MU273333v1_fix.fa. You may want to try and realign the read to the patched genome using minimap2.
+
+```bash
+samtools view -F 3844 tumor.bam chr1:16500000-16650000 | grep "^8c0eba99-ad7d-4246-87f0-46177b9946d4" | cut -f 1,10 | awk '{print ">"$1"\n"$2;}' > read.fa
+minimap2 -ax map-ont -L chr1_MU273333v1_fix.fa read.fa | samtools sort -o read.bam -
+samtools index read.bam
+wally dotplot -g chr1_MU273333v1_fix.fa -r 8c0eba99-ad7d-4246-87f0-46177b9946d4 -e chr1_MU273333v1_fix:300000-400000 read.bam
 ```
 
 ### Delly structural variant calling
 
 [Delly](https://github.com/dellytools/delly) is a method for detecting structural variants using short- or long-read sequencing data.
-Using the tumor and normal genome alignment, delly calculates structural variants and outputs them as a BCF file, the binary encoding of [VCF](https://samtools.github.io/hts-specs). `lr` is delly's long-read SV discovery mode.
+Using the tumor and normal genome alignment, delly calculates structural variants and outputs them as a BCF file, the binary encoding of [VCF](https://samtools.github.io/hts-specs). Delly's long-read SV discovery mode uses the subcommand `lr`.
 
 ```bash
 delly lr -g genome.fa -o sv.bcf tumor.bam control.bam
