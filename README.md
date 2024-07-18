@@ -22,7 +22,7 @@ Then clone the repository and install all dependencies using mamba:
 
 Download the course data:
 
-ToDo
+`make FILE=1PfCy8yESCxvI8RJsfxTbF-QsygfnKNA2 download`
 
 ## Load the software stack
 
