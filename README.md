@@ -240,3 +240,63 @@ In this case, `3to3` indicates that chr1p is joined with chr5p in inverted orien
 
 * Does the derivative chromosome containing chr1p and chr5p contain a centromere?
 
+### Calling and phasing small variants (SNVs and InDels)
+
+For phasing and haplo-tagging the tumor reads we first call small variants using [longshot](https://github.com/pjedge/longshot) in the matched control.
+
+```bash
+longshot --no_haps -s HG008-N-P --bam control.bam --ref genome.fa --out control.longshot.vcf
+bgzip control.longshot.vcf
+tabix control.longshot.vcf.gz
+```
+
+We can then perform long-read based haplotyping using [WhatsHap](https://github.com/whatshap/whatshap) and phase heterozygous variants.
+
+```bash
+whatshap phase --ignore-read-groups --reference genome.fa control.longshot.vcf.gz control.bam -o control.whatshap.vcf
+bgzip control.whatshap.vcf
+tabix control.whatshap.vcf.gz
+```
+
+Let's briefly inspect some phasing statistics using the [WhatsHap](https://github.com/whatshap/whatshap) `stats` subcommand.
+
+```bash
+whatshap stats --chr-lengths <(cut -f 1,2 genome.fa.fai) control.whatshap.vcf.gz
+```
+
+#### Exercises
+
+* How many mega-basepairs is the longest phased block?
+* What is the N50 phased block length?
+
+### Haplotagging of tumor reads
+
+We can now use the haplotypes derived from the matched control to phase the tumor reads.
+
+```bash
+whatshap haplotag -o tumor.hp.bam --reference genome.fa --ignore-read-groups --tag-supplementary control.whatshap.vcf.gz tumor.bam
+samtools index tumor.hp.bam
+```
+
+The `tumor.hp.bam` file now has the `HP` tag included for all the reads that could be phased to haplotype 1 or 2. [IGV](http://software.broadinstitute.org/software/igv/) can group and color reads by `HP` tag so let's revisit the SVs from the `svs.bed` file that we used in the beginning of the tutorial.
+
+```bash
+igv -g genome.fa
+```
+
+As previously, once IGV has started use 'File' and 'Load from File' to load the `tumor.hp.bam` alignment file with the `HP` haplotype tags. Then import the `svs.bed` file from your working directory using 'Regions' and 'Import Regions'. You can then easily navigate to the structural variants with 'Regions' and 'Region Navigator'. Once you have selected an SV, right click on `tumor.hp.bam`, use 'Color alignments by' and select 'tag'. Then enter 'HP' to color by haplotype. Alternatively, you can also use 'Group alignments by' tag to sort reads according to assigned haplotype.
+
+#### Exercises
+
+* Did all heterozygous SVs separate correctly by haplotype?
+
+### Variant allele frequency of small variants across somatic copy-number alterations
+
+Let's annotate the small variants of the control genome in the matched tumor.
+
+```bash
+longshot --no_haps --potential_variants control.longshot.vcf.gz --min_cov 3 --min_alt_count 1 --min_alt_frac 0.01 -s HG008-T --bam tumor.bam --ref genome.fa --out tumor.longshot.vcf
+bgzip tumor.longshot.vcf
+tabix tumor.longshot.vcf.gz
+```
+
