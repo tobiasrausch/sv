@@ -10,7 +10,7 @@ all: ${TARGETS}
 	curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(shell uname)-$(shell uname -m).sh" && bash Mambaforge-$(shell uname)-$(shell uname -m).sh -b -p mamba && rm "Mambaforge-$(shell uname)-$(shell uname -m).sh" && touch .mamba
 
 .tools: .mamba
-	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y -c conda-forge -c bioconda datamash samtools bcftools bedtools htslib delly alfred igv wally minimap2 nanoplot sniffles whatshap longshot && touch .tools
+	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y -c conda-forge -c bioconda datamash samtools bcftools bedtools htslib delly alfred igv wally minimap2 nanoplot sniffles whatshap longshot ont-modkit && touch .tools
 
 .rstats: .mamba .tools
 	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y -c conda-forge -c bioconda bioconductor-genomicfeatures r-ggplot2 r-reshape2 r-gridextra r-cowplot bioconductor-dnacopy && touch .rstats

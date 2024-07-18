@@ -295,8 +295,27 @@ As previously, once IGV has started use 'File' and 'Load from File' to load the 
 Let's annotate the small variants of the control genome in the matched tumor.
 
 ```bash
-longshot --no_haps --potential_variants control.longshot.vcf.gz --min_cov 3 --min_alt_count 1 --min_alt_frac 0.01 -s HG008-T --bam tumor.bam --ref genome.fa --out tumor.longshot.vcf
+longshot --no_haps --potential_variants control.longshot.vcf.gz --output-ref --min_cov 3 --min_alt_count 1 --min_alt_frac 0.1 -s HG008-T --bam tumor.bam --ref genome.fa --out tumor.longshot.vcf
 bgzip tumor.longshot.vcf
 tabix tumor.longshot.vcf.gz
 ```
+
+Then we merge the tumor and control VCF files to annotate all heterozygous variants with their allelic depth in the tumor.
+
+```bash
+bcftools merge -O b -o tumor.control.bcf tumor.longshot.vcf.gz control.whatshap.vcf.gz
+bcftools query -f "%CHROM\t%POS[\t%GT\t%AD]\n" tumor.control.bcf  | grep "0|1" | cut -f 1,2,4 | sed 's/,/\t/' | awk '$3+$4>0 {print $1"\t"$2"\t"($3/($3+$4));}' > var.vaf
+bcftools query -f "%CHROM\t%POS[\t%GT\t%AD]\n" tumor.control.bcf  | grep "1|0" | cut -f 1,2,4 | sed 's/,/\t/' | awk '$3+$4>0 {print $1"\t"$2"\t"($4/($3+$4));}' >> var.vaf
+head var.vaf
+```
+
+We can then overlay the variant allele frequencey (B-allele frequency) of small variants with the read-depth information.
+
+```bash
+Rscript cnBafSV.R cnv.cov.gz svs.tsv var.vaf
+```
+
+#### Exercises
+
+* For the somatic duplication, we have an estimated total copy-number of 3. What are the expected B-allele frequencies in that region?
 
