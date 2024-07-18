@@ -37,7 +37,7 @@ export PATH=`pwd`/mamba/bin:${PATH}
 
 ### Reconstructing a derivative chromosome in cancer
 
-In this practical we will analyze germline and somatic structural variants (SVs) of a [tumor cell line](https://www.nist.gov/programs-projects/cancer-genome-bottle) from a pancreatic ductal adenocarcinoma. The data was subsampled and subset to chr1 and chr5 to speed up all subsequent analysis. The tumor genome alignment file is named `tumor.bam` and the control genome alignment file is named `control.bam`.
+In this practical we will analyze structural variants (SVs) of a [pancreatic cancer cell line](https://www.nist.gov/programs-projects/cancer-genome-bottle) from the [Genome in a Bottle project](https://www.nature.com/articles/sdata201625). The data was subsampled and subset to chr1 and chr5 to speed up all subsequent analysis. The tumor genome alignment file is named `tumor.bam` and the control genome alignment file is named `control.bam`.
 
 ### Structural variant alignment quality control
 
