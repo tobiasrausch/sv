@@ -4,7 +4,7 @@
 
 # Structural variant calling tutorial using long-reads.
 
-## Installation - Linux
+## Installation
 
 Installation of required libraries depends on your linux distribution, e.g., for Ubuntu:
 
