@@ -165,7 +165,7 @@ bcftools view sv.bcf chr5:56632119-56632158
 Delly's consensus sequence (INFO:CONSENSUS) is a local assembly of all SV-supporting reads. So we can again create a dotplot using [wally](https://github.com/tobiasrausch/wally) to highlight the insertion relative to GRCh38.
 
 ```bash
-bcftools query -f "%ID\t%INFO/CONSENSUS\n" sv.bcf | grep "INS00001302" | awk '{print ">"$1"\n"$2;}' > ins.fa
+bcftools query -f "%POS\t%ID\t%INFO/CONSENSUS\n" sv.bcf | grep "^566321" | awk '{print ">"$2"\n"$3;}' > ins.fa
 samtools faidx genome.fa chr5:56631000-56633000 | sed 's/^>.*$/>hg38/' >> ins.fa
 wally dotplot ins.fa
 ```
