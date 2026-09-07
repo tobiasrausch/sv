@@ -42,4 +42,5 @@ dataprep = ["dataprep"]
 
 [tasks]
 lab = "jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --ServerApp.token=''"
-download = { cmd = "mkdir -p data && cd data && gdown $FILE && tar -xzf lr.tar.gz && cp ../scripts/cnBafSV.R lr/ && rm lr.tar.gz" }
+download = { cmd = "mkdir -p data && cd data && gdown $FILE && tar -xzf lr.tar.gz && cp ../scripts/cnBafSV.R ../scripts/igv.ipynb lr/ && rm lr.tar.gz" }
+
