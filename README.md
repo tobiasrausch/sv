@@ -75,17 +75,20 @@ delly lr -y ont -g genome.fa -o sv.bcf tumor.cram control.cram
 
 ### Germline Structural Variants
 
-While delly is running, we can already get an idea of how SVs look like in long-read sequencing data. I have prepared a [BED](https://bedtools.readthedocs.io/) file with some "simple" germline structural variants like deletions and insertions and one complex example.
+While delly is running, we can already get an idea of how SVs look like in long-read sequencing data. I have prepared a [BED](https://bedtools.readthedocs.io/) file with some "simple" germline structural variants like deletions and insertions.
 
 ```bash
 cat svs.bed
 ```
 
-Using [IGV](http://software.broadinstitute.org/software/igv/) you can then browse the SVs in JupyterLab (`jupyter lab`) or you can use [wally](https://github.com/tobiasrausch/wally) to generate plots on the command line.
+You can use [wally](https://github.com/tobiasrausch/wally) to generate plots for these SVs on the command line.
 
 ```bash
 wally region -R svs.bed -cp -g genome.fa tumor.cram control.cram
 ```
+
+If you prefer a graphical genome browser, you can use [IGV](http://software.broadinstitute.org/software/igv/) or view the SVs in JupyterLab (`jupyter lab`).
+
 
 #### Exercises
 
