@@ -64,9 +64,18 @@ This implies that some structural variants will have only weak support. In terms
 * What fraction of tumor reads could be haplotagged and what is the N50 phased block length?
 * How is the N50 read length calculated?
 
+### Delly structural variant calling
+
+[Delly](https://github.com/dellytools/delly) is a method for detecting structural variants using short- or long-read sequencing data.
+Using the tumor and normal genome alignment, delly calculates structural variants and outputs them as a BCF file, the binary encoding of [VCF](https://samtools.github.io/hts-specs). Delly's long-read SV discovery mode uses the subcommand `lr`.
+
+```bash
+delly lr -y ont -g genome.fa -o sv.bcf tumor.cram control.cram
+```
+
 ### Germline Structural Variants
 
-Before we dive into structural variant (SV) calling, let's get an idea of how SVs look like in long-read sequencing data. I have prepared a [BED](https://bedtools.readthedocs.io/) file with some "simple" germline structural variants like deletions and insertions and one complex example.
+While delly is running, we can already get an idea of how SVs look like in long-read sequencing data. I have prepared a [BED](https://bedtools.readthedocs.io/) file with some "simple" germline structural variants like deletions and insertions and one complex example.
 
 ```bash
 cat svs.bed
@@ -83,18 +92,10 @@ wally region -R svs.bed -cp -g genome.fa tumor.cram control.cram
 * Which of the two insertions could be a mobile element insertion? What typical features of a mobile element can you observe for that insertion?
 * For the heterozygous SVs, do nearby heterozygous SNPs "tag" the SV (same `HP`)?
 
-### Delly structural variant calling
-
-[Delly](https://github.com/dellytools/delly) is a method for detecting structural variants using short- or long-read sequencing data.
-Using the tumor and normal genome alignment, delly calculates structural variants and outputs them as a BCF file, the binary encoding of [VCF](https://samtools.github.io/hts-specs). Delly's long-read SV discovery mode uses the subcommand `lr`.
-
-```bash
-delly lr -y ont -g genome.fa -o sv.bcf tumor.cram control.cram
-```
 
 #### VCF encoding of structural variants
 
-VCF was originally designed for small variants such as single-nucleotide variants (SNVs) and short insertions and deletions (InDels). That's why all SV callers heavily use the VCF INFO fields to encode additional information about the SV such as the structural variant end position (INFO:END) and the SV type (INFO:SVTYPE). You can look at the header of the BCF file using grep where '-A 2' includes the first two structural variant records after the header in the file:
+VCF was originally designed for small variants such as single-nucleotide variants (SNVs) and short insertions and deletions (InDels). That's why all SV callers heavily use the VCF INFO fields to encode additional information about the SV such as the structural variant end position (INFO:END) and the SV type (INFO:SVTYPE). Once delly is finished, you can look at the header of the BCF file using grep, where '-A 2' includes the first two structural variant records after the header in the file:
 
 ```bash
 bcftools view sv.bcf | grep "^#" -A 2
