@@ -8,7 +8,7 @@ In this practical we reconstruct a derivative chromosome in cancer using long re
 
 ## Installation
 
-[pixi](https://pixi.sh) can be used to install all required tools and download the course data.
+[pixi](https://pixi.sh) can be used to install all required tools.
 
 ```bash
 curl -fsSL https://pixi.sh/install.sh | bash
@@ -16,6 +16,11 @@ git clone --recursive https://github.com/tobiasrausch/sv
 cd sv
 pixi install
 pixi shell
+```
+
+In the pixi environment, you can then download the course data.
+
+```bash
 FILE=1PfCy8yESCxvI8RJsfxTbF-QsygfnKNA2 pixi run download
 ```
 
@@ -41,7 +46,7 @@ docker run -it -p 8888:8888 -v /data/lr:/opt/sv/data/lr trausch/sv:latest
 
 ### Structural variant alignment quality control
 
-the quality of the sequencing data as, for example, local assembly methods suffer from short reads and a high sequencing error rate and read-depth methods from uneven coverage. Common quality criteria are the percentage of reads mapped, the duplicate rate, the read-length distribution and the error rate. Popular tools to compute long-read quality control metrics are [cramino](https://github.com/wdecoster/cramino) and [Alfred](https://github.com/tobiasrausch/alfred).
+Before calling SVs, you should check the sequencing quality. Common quality criteria are the percentage of reads mapped, the duplicate rate, the read-length distribution and the error rate. Popular tools to compute long-read quality control metrics are [cramino](https://github.com/wdecoster/cramino) and [Alfred](https://github.com/tobiasrausch/alfred).
 
 ```bash
 cd data/lr/
