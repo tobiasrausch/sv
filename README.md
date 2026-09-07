@@ -46,7 +46,7 @@ docker run -it -p 8888:8888 -v /data/lr:/opt/sv/data/lr trausch/sv:latest
 
 ### Structural variant alignment quality control
 
-Before calling SVs, you should check the sequencing quality. Common quality criteria are the percentage of reads mapped, the duplicate rate, the read-length distribution and the error rate. Popular tools to compute long-read quality control metrics are [cramino](https://github.com/wdecoster/cramino) and [Alfred](https://github.com/tobiasrausch/alfred).
+Before calling SVs, you should check the sequencing quality. Common quality criteria are the percentage of reads mapped, the duplicate rate, the read-length distribution and the error rate. Popular tools to compute long-read quality control metrics are [cramino](https://github.com/wdecoster/cramino) and [alfred](https://github.com/tobiasrausch/alfred).
 
 ```bash
 cd data/lr/
