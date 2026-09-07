@@ -1,0 +1,6 @@
+data/
+.pixi/
+.pixihome/
+*.tar.gz
+.git/
+.github/
