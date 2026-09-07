@@ -10,7 +10,6 @@ platforms = ["linux-64"]
 delly = ">=2.6"
 wally = ">=0.9.1"
 alfred = ">=0.6"
-sniffles = "*"
 samtools = ">=1.18"
 bcftools = ">=1.18"
 bedtools = "*"

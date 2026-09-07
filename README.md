@@ -83,15 +83,6 @@ wally region -R svs.bed -cp -g genome.fa tumor.cram control.cram
 * Which of the two insertions could be a mobile element insertion? What typical features of a mobile element can you observe for that insertion?
 * For the heterozygous SVs, do nearby heterozygous SNPs "tag" the SV (same `HP`)?
 
-### Methylation
-
-The reads were basecalled with a 5mC model, so each CpG carries a methylation probability. [wally](https://github.com/tobiasrausch/wally) can plot this methylation information onto the alignments with its modified-base view. Each CpG is colored from blue (unmethylated) to red (methylated).
-
-```bash
-bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf | grep -P "chr1\t789"
-wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.cram
-```
-
 ### Delly structural variant calling
 
 [Delly](https://github.com/dellytools/delly) is a method for detecting structural variants using short- or long-read sequencing data.
@@ -153,7 +144,17 @@ bcftools query -i 'SVTYPE=="INS"' -f "%SVTYPE\t%SUBTYPE\n" sv.bcf  | sort | uniq
 * How can bcftools be used to count the number of structural variants for the different SV types (DEL, INS, DUP, INV, BND)?
 * How many potential Alu insertions are in forward and reverse orientation?
 
-## Allele-specific methylation at structural variants
+
+### Methylation
+
+The reads were basecalled with a 5mC model, so each CpG carries a methylation probability. [wally](https://github.com/tobiasrausch/wally) can plot this methylation information onto the alignments with its modified-base view. Each CpG is colored from blue (unmethylated) to red (methylated).
+
+```bash
+bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf | grep -P "chr1\t789"
+wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.cram
+```
+
+### Allele-specific methylation at structural variants
 
 For each SV, delly reports methylation separately for the reference and alternative allele (`MR` vs `MA`, each with four windows around the SV start and end breakpoints). To find insertions where the alternative allele is methylated, we can use for instance:
 
@@ -161,7 +162,7 @@ For each SV, delly reports methylation separately for the reference and alternat
 bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf | awk -F'\t' '$3=="INS" && $7 ~ /,9[0-9],/'
 ```
 
-A typical example is the below ~2.3 Kbp insertion where the reference is midly methylated but the inserted sequence is almost fully methylated.
+A typical example is the below ~2.3 Kbp insertion where the reference is mildly methylated but the inserted sequence is almost fully methylated.
 
 ```bash
 wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.cram
@@ -246,7 +247,7 @@ tabix tumor.ad.vcf.gz
 bcftools merge -O b -o tumor.control.bcf tumor.ad.vcf.gz control.het.bcf
 ```
 
-Now we split the tumor allelic depths by the control haplotype (`0|1` vs `1|0`) and plot he BAF signal.
+Now we split the tumor allelic depths by the control haplotype (`0|1` vs `1|0`) and plot the BAF signal.
 
 ```bash
 bcftools query -f "%CHROM\t%POS[\t%GT\t%AD]\n" tumor.control.bcf | grep "0|1" | cut -f 1,2,4 | sed 's/,/\t/g' | awk '$3+$4>0 {print $1"\t"$2"\t"($3/($3+$4));}' > var.vaf
