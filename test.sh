@@ -6,9 +6,9 @@ if [ -d data/lr/ ]
 then
     cat README.md | awk '/^```bash$/,/^```$/  {print} {next}' | grep -v '^`' > run.sh
     LINE=`cat run.sh | grep -n "cd data/lr/" | cut -f 1 -d ":"`
-    tail -n +${LINE} run.sh > run.sh.tmp
+    echo 'set -e' > run.sh.tmp
+    tail -n +${LINE} run.sh >> run.sh.tmp
     mv run.sh.tmp run.sh
-    sed -i '1i set -e' run.sh
     chmod a+x run.sh
     ./run.sh
     rc=$?
