@@ -4,7 +4,7 @@
 
 # Structural variant calling tutorial using long-reads.
 
-In this practical we reconstruct a derivative chromosome in cancer using long reads. The data comes from the [HG008 cancer cell line](https://www.nist.gov/programs-projects/cancer-genome-bottle) of the [Cancer Genome in a Bottle](https://www.nist.gov/programs-projects/cancer-genome-bottle) project. The data was subsampled and subset to `chr1` and `chr5` to keep all analyses fast.
+In this practical we reconstruct a derivative chromosome in cancer using long reads. The data comes from the [HG008 cancer cell line](https://www.nist.gov/programs-projects/cancer-genome-bottle) of the [Cancer Genome in a Bottle](https://www.nist.gov/programs-projects/cancer-genome-bottle) project. The data was subsampled and subset to `chr1` and `chr5` to keep all analyses fast. The tumor genome alignment file is named `tumor.cram` and the control genome alignment file is named `control.cram`. The BAM/CRAM files are so-called modBAM files with methylation information and reads have been tagged by parental haplotype.
 
 ## Installation
 
@@ -28,29 +28,26 @@ docker run -it -p 8888:8888 trausch/sv:latest
 
 In JupyterLab, you then need to download the data using `FILE=1PfCy8yESCxvI8RJsfxTbF-QsygfnKNA2 pixi run download`.
 
-In courses, I use pre-built AWS course images with the data so you can directly launch the container with the mounted data.
+## On-site courses
+
+For live courses, I usually use pre-built AWS course images so you can directly launch the container with the pre-downloaded data.
 
 ```bash
-ssh -L 8888:localhost:8888 ubuntu@<host>
+ssh -L 8888:localhost:8888 ubuntu@<AWS_host_IP>
 docker run -it -p 8888:8888 -v /data/lr:/opt/sv/data/lr trausch/sv:latest
 ```
 
 ## SV Calling
 
-### Reconstructing a derivative chromosome in cancer
-
-The tutorial data was subsampled and subset to chr1 and chr5.  The tumor genome alignment file is named `tumor.hp.bam` and the control genome alignment file is named `control.hp.bam`. The BAM files are so-called modBAM files with methylation information and reads have been tagged by parental haplotype.
-
 ### Structural variant alignment quality control
 
-For the discovery of structural variants, you should first assess the quality of the sequencing data as, for example, local assembly methods suffer from short reads and a high sequencing error rate and read-depth methods from uneven coverage. Common quality criteria are the percentage of reads mapped, the duplicate rate, the read-length distribution and the error rate. Popular tools to compute long-read quality control metrics are [NanoPlot](https://github.com/wdecoster/NanoPlot) and [Alfred](https://github.com/tobiasrausch/alfred).
+the quality of the sequencing data as, for example, local assembly methods suffer from short reads and a high sequencing error rate and read-depth methods from uneven coverage. Common quality criteria are the percentage of reads mapped, the duplicate rate, the read-length distribution and the error rate. Popular tools to compute long-read quality control metrics are [cramino](https://github.com/wdecoster/cramino) and [Alfred](https://github.com/tobiasrausch/alfred).
 
 ```bash
 cd data/lr/
-alfred qc -r genome.fa -o qc.tsv.gz -j qc.json.gz tumor.hp.bam
+cramino --reference genome.fa --phased tumor.cram
+alfred qc -r genome.fa -o qc.tsv.gz -j qc.json.gz tumor.cram
 zcat qc.tsv.gz | grep ^ME | datamash transpose
-NanoPlot --bam tumor.hp.bam -o qc_tumor
-cat qc_tumor/NanoStats.txt
 ```
 
 As you can see from the QC results, the data has been downsampled to fairly low coverage to speed up all analyses in this tutorial.
@@ -70,12 +67,12 @@ Before we dive into structural variant (SV) calling, let's get an idea of how SV
 cat svs.bed
 ```
 
-From JupyterLab, you can open the `igv.ipynb` notebook or use the hosted [IGV web app](https://igv.org/app/). Then load `genome.fa`, `tumor.hp.bam`, `control.hp.bam` and `svs.bed` and then color and group alignments by the `HP` tag.
+From JupyterLab, you can open the `igv.ipynb` notebook or use the hosted [IGV web app](https://igv.org/app/). Then load `genome.fa`, `tumor.cram`, `control.cram` and `svs.bed` and then color and group alignments by the `HP` tag.
 
 Alternatively, you can use [wally](https://github.com/tobiasrausch/wally) to generate plots on the command line.
 
 ```bash
-wally region -R svs.bed -cp -g genome.fa tumor.hp.bam control.hp.bam
+wally region -R svs.bed -cp -g genome.fa tumor.cram control.cram
 ```
 
 #### Exercises
@@ -88,7 +85,7 @@ wally region -R svs.bed -cp -g genome.fa tumor.hp.bam control.hp.bam
 The reads were basecalled with a 5mC model, so each CpG carries a methylation probability. [wally](https://github.com/tobiasrausch/wally) can plot this methylation information onto the alignments with its modified-base view. Each CpG is colored from blue (unmethylated) to red (methylated).
 
 ```bash
-wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.hp.bam
+wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.cram
 ```
 
 ### Delly structural variant calling
@@ -97,7 +94,7 @@ wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.hp.
 Using the tumor and normal genome alignment, delly calculates structural variants and outputs them as a BCF file, the binary encoding of [VCF](https://samtools.github.io/hts-specs). Delly's long-read SV discovery mode uses the subcommand `lr`.
 
 ```bash
-delly lr -y ont -g genome.fa -o sv.bcf tumor.hp.bam control.hp.bam
+delly lr -y ont -g genome.fa -o sv.bcf tumor.cram control.cram
 ```
 
 #### VCF encoding of structural variants
@@ -164,7 +161,7 @@ bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf \
 A typical example is the below ~2.3 Kbp insertion where the reference is midly methylated but the inserted sequence is almost fully methylated.
 
 ```bash
-wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.hp.bam
+wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.cram
 ```
 
 #### Exercises
@@ -191,7 +188,7 @@ Using [Bcftools](https://github.com/samtools/bcftools) and [wally](https://githu
 
 ```bash
 bcftools query -e 'SVTYPE=="BND"' -f "%CHROM\t%POS\t%INFO/END\t%ID\n" somatic.bcf | awk '{print $1"\t"($2-50)"\t"($3+50)"\t"$4;}' > somatic.bed
-wally region -R somatic.bed -cp -g genome.fa tumor.hp.bam control.hp.bam
+wally region -R somatic.bed -cp -g genome.fa tumor.cram control.cram
 ```
 
 #### Exercises
@@ -203,7 +200,7 @@ wally region -R somatic.bed -cp -g genome.fa tumor.hp.bam control.hp.bam
 [IGV](http://software.broadinstitute.org/software/igv/) and [wally](https://github.com/tobiasrausch/wally) are good for relatively small SVs but for large SVs like the duplication-type SV or inter-chromosomal translocations we need to integrate read-depth with structural variant predictions to get a better overview of complex somatic rearrangements. Let's first create a simple read-depth plot.
 
 ```bash
-delly cnv -w 50000 -o cnv.bcf -c cnv.cov.gz -g genome.fa tumor.hp.bam
+delly cnv -w 50000 -o cnv.bcf -c cnv.cov.gz -g genome.fa tumor.cram
 Rscript cnBafSV.R cnv.cov.gz
 ```
 Now we can overlay the somatic structural variants on top of the read-depth information.
@@ -241,7 +238,7 @@ tabix -s1 -b2 -e2 sites.tsv.gz
 As we only need read counts and no variant calls, we can simply use `bcftools mpileup` on these variant sites.
 
 ```bash
-bcftools mpileup -f genome.fa -a FORMAT/AD -T sites.tsv.gz tumor.hp.bam -Oz -o tumor.ad.vcf.gz
+bcftools mpileup -f genome.fa -a FORMAT/AD -T sites.tsv.gz tumor.cram -Oz -o tumor.ad.vcf.gz
 tabix tumor.ad.vcf.gz
 bcftools merge -O b -o tumor.control.bcf tumor.ad.vcf.gz control.het.bcf
 ```
