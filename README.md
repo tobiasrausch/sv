@@ -72,9 +72,7 @@ Before we dive into structural variant (SV) calling, let's get an idea of how SV
 cat svs.bed
 ```
 
-From JupyterLab, you can open the `igv.ipynb` notebook or use the hosted [IGV web app](https://igv.org/app/). Then load `genome.fa`, `tumor.cram`, `control.cram` and `svs.bed` and then color and group alignments by the `HP` tag.
-
-Alternatively, you can use [wally](https://github.com/tobiasrausch/wally) to generate plots on the command line.
+Using [IGV](http://software.broadinstitute.org/software/igv/) you can then browse the SVs in JupyterLab (`jupyter lab`) or you can use [wally](https://github.com/tobiasrausch/wally) to generate plots on the command line.
 
 ```bash
 wally region -R svs.bed -cp -g genome.fa tumor.cram control.cram
@@ -90,6 +88,7 @@ wally region -R svs.bed -cp -g genome.fa tumor.cram control.cram
 The reads were basecalled with a 5mC model, so each CpG carries a methylation probability. [wally](https://github.com/tobiasrausch/wally) can plot this methylation information onto the alignments with its modified-base view. Each CpG is colored from blue (unmethylated) to red (methylated).
 
 ```bash
+bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf | grep -P "chr1\t789"
 wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.cram
 ```
 
@@ -115,10 +114,10 @@ Please note that at this stage the BCF file contains germline and somatic struct
 
 #### Querying VCF files
 
-[Bcftools](https://github.com/samtools/bcftools) offers many possibilities to query and reformat SV calls. For instance, to output a table with the chromosome, start, end, identifier, phaed genotype and haplotype count of each SV we can use:
+[Bcftools](https://github.com/samtools/bcftools) offers many possibilities to query and reformat SV calls. For instance, to output a table with the chromosome, start, end, identifier and genotype of each SV we can use:
 
 ```bash
-bcftools query -e 'SVTYPE=="BND"' -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%PS\t%HP]\n" sv.bcf | head
+bcftools query -i 'QUAL>300 && SVTYPE!="BND"' -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT]\n" sv.bcf | head
 ```
 
 Inter-chromosomal translocations with SV type `BND` are a special case because they involve two different chromosomes.
@@ -134,7 +133,7 @@ grep "INS02" svs.bed
 bcftools view sv.bcf chr5:56632119-56632158
 ```
 
-Delly's consensus sequence (INFO:CONSENSUS) is a local assembly of all SV-supporting reads. So we can again create a dotplot using [wally](https://github.com/tobiasrausch/wally) to highlight the insertion relative to GRCh38.
+Delly's consensus sequence (INFO:CONSENSUS) is a local assembly of all SV-supporting reads. With [wally](https://github.com/tobiasrausch/wally) we can then easily create a dotplot of this consensus against GRCh38 to highlight the insertion relative to GRCh38.
 
 ```bash
 bcftools query -f "%POS\t%ID\t%INFO/CONSENSUS\n" sv.bcf | grep "^566321" | awk '{print ">"$2"\n"$3;}' > ins.fa
@@ -142,7 +141,7 @@ samtools faidx genome.fa chr5:56631000-56633000 | sed 's/^>.*$/>hg38/' >> ins.fa
 wally dotplot ins.fa
 ```
 
-Delly directly annotates SV subtypes so you can for instance count the different types of mobile elements.
+Delly directly annotates SV subtypes, including Alu, Line1 and SVA mobile elements.
 
 ```bash
 bcftools query -i 'SVTYPE=="INS"' -f "%SVTYPE\t%SUBTYPE\n" sv.bcf  | sort | uniq -c
@@ -159,8 +158,7 @@ bcftools query -i 'SVTYPE=="INS"' -f "%SVTYPE\t%SUBTYPE\n" sv.bcf  | sort | uniq
 For each SV, delly reports methylation separately for the reference and alternative allele (`MR` vs `MA`, each with four windows around the SV start and end breakpoints). To find insertions where the alternative allele is methylated, we can use for instance:
 
 ```bash
-bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf \
-  | awk -F'\t' '$3=="INS" && $7 ~ /,9[0-9],/'
+bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf | awk -F'\t' '$3=="INS" && $7 ~ /,9[0-9],/'
 ```
 
 A typical example is the below ~2.3 Kbp insertion where the reference is midly methylated but the inserted sequence is almost fully methylated.
@@ -205,7 +203,7 @@ wally region -R somatic.bed -cp -g genome.fa tumor.cram control.cram
 [IGV](http://software.broadinstitute.org/software/igv/) and [wally](https://github.com/tobiasrausch/wally) are good for relatively small SVs but for large SVs like the duplication-type SV or inter-chromosomal translocations we need to integrate read-depth with structural variant predictions to get a better overview of complex somatic rearrangements. Let's first create a simple read-depth plot.
 
 ```bash
-delly cnv -w 50000 -o cnv.bcf -c cnv.cov.gz -g genome.fa tumor.cram
+delly cnv -o cnv.bcf -c cnv.cov.gz -g genome.fa tumor.cram
 Rscript cnBafSV.R cnv.cov.gz
 ```
 Now we can overlay the somatic structural variants on top of the read-depth information.
