@@ -39,7 +39,7 @@ docker run -it -p 8888:8888 -v /data/lr:/opt/sv/data/lr trausch/sv:latest
 
 ### Reconstructing a derivative chromosome in cancer
 
-The tutorial data was subsampled and subset to chr1 and chr5.  The tumor genome alignment file is named `tumor.bam` and the control genome alignment file is named `control.bam`. The BAM files are so-called modBAM files with methylation information and reads have been tagged by parental haplotype.
+The tutorial data was subsampled and subset to chr1 and chr5.  The tumor genome alignment file is named `tumor.hp.bam` and the control genome alignment file is named `control.hp.bam`. The BAM files are so-called modBAM files with methylation information and reads have been tagged by parental haplotype.
 
 ### Structural variant alignment quality control
 
@@ -47,9 +47,9 @@ For the discovery of structural variants, you should first assess the quality of
 
 ```bash
 cd data/lr/
-alfred qc -r genome.fa -o qc.tsv.gz -j qc.json.gz tumor.bam
+alfred qc -r genome.fa -o qc.tsv.gz -j qc.json.gz tumor.hp.bam
 zcat qc.tsv.gz | grep ^ME | datamash transpose
-NanoPlot --bam tumor.bam -o qc_tumor
+NanoPlot --bam tumor.hp.bam -o qc_tumor
 cat qc_tumor/NanoStats.txt
 ```
 
@@ -191,7 +191,7 @@ Using [Bcftools](https://github.com/samtools/bcftools) and [wally](https://githu
 
 ```bash
 bcftools query -e 'SVTYPE=="BND"' -f "%CHROM\t%POS\t%INFO/END\t%ID\n" somatic.bcf | awk '{print $1"\t"($2-50)"\t"($3+50)"\t"$4;}' > somatic.bed
-wally region -R somatic.bed -cp -g genome.fa tumor.bam control.bam
+wally region -R somatic.bed -cp -g genome.fa tumor.hp.bam control.hp.bam
 ```
 
 #### Exercises
