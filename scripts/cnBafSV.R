@@ -28,7 +28,9 @@ if (length(args) == 1) { quit(); }
 # Read-depth + SVs
 sv = read.table(args[2], header=F)
 colnames(sv) = c("chr","start","end","type","id", "chr2", "pos2")
-p2 = p + geom_curve(data=sv, aes(x=start, xend=end, col=type), y=6, yend=6, curvature=-1)
+svarc = sv[sv$type != "BND" & sv$end > sv$start,]
+p2 = p
+if (nrow(svarc) > 0) { p2 = p2 + geom_curve(data=svarc, aes(x=start, xend=end, col=type), y=6, yend=6, curvature=-1); }
 sv = sv[sv$type=="BND",]
 sv$pos2 = as.numeric(sv$pos2)
 sv$chr = factor(sv$chr, levels=c("chr1", "chr5"))
