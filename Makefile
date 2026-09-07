@@ -10,13 +10,13 @@ all: ${TARGETS}
 	curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(shell uname)-$(shell uname -m).sh" && bash Miniforge3-$(shell uname)-$(shell uname -m).sh -b -p mamba && rm "Miniforge3-$(shell uname)-$(shell uname -m).sh" && touch .mamba
 
 .tools: .mamba
-	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y --override-channels -c conda-forge -c bioconda datamash samtools bcftools bedtools htslib delly alfred igv wally minimap2 nanoplot sniffles whatshap longshot && touch .tools
+	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y --override-channels -c conda-forge -c bioconda datamash samtools bcftools bedtools htslib delly alfred wally minimap2 nanoplot sniffles longphase jupyterlab && touch .tools
 
 .rstats: .mamba .tools
-	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y --override-channels -c conda-forge -c bioconda bioconductor-genomicfeatures r-ggplot2 r-reshape2 r-gridextra r-cowplot bioconductor-dnacopy && touch .rstats
+	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y --override-channels -c conda-forge -c bioconda bioconductor-genomicfeatures r-ggplot2 r-scales r-reshape2 r-gridextra r-cowplot bioconductor-dnacopy && touch .rstats
 
 .pcks: .mamba .tools .rstats
-	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y --override-channels -c conda-forge -c bioconda cyvcf2 numpy pysam && pip install gdown && touch .pcks
+	export PATH="${PBASE}/mamba/bin:${PATH}" && mamba install -y --override-channels -c conda-forge -c bioconda cyvcf2 numpy pysam && pip install gdown igv-notebook && touch .pcks
 
 .check: .mamba .tools .rstats .pcks
 	export PATH="${PBASE}/mamba/bin:${PATH}" && delly --version && touch .check
