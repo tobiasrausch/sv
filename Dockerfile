@@ -1,6 +1,7 @@
-# Build:  docker build -t trausch/sv:latest .
-# Run:    docker run -it -p 8888:8888 trausch/sv:latest
-# Cloud:  ssh -L 8888:localhost:8888 user@host
+# Build: docker build -t trausch/sv:latest .
+# Run: docker run -it -p 8888:8888 trausch/sv:latest
+# Run & mount the data: docker run -it -p 8888:8888 -v /data/lr:/opt/sv/data/lr trausch/sv:latest
+# Cloud: ssh -L 8888:localhost:8888 user@host
 # Data download (inside the container): FILE=<id> pixi run download
 FROM ubuntu:24.04
 

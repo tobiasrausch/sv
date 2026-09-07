@@ -34,4 +34,4 @@ jobs:
             wally --version
             alfred --version
             samtools --version | head -1
-            Rscript -e "library(DNAcopy); library(ggplot2)"
+            Rscript -e "library(DNAcopy); library(ggplot2)"'
