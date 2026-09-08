@@ -154,7 +154,6 @@ bcftools query -i 'SVTYPE=="INS"' -f "%SVTYPE\t%SUBTYPE\n" sv.bcf  | sort | uniq
 The reads were basecalled with a 5mC model, so each CpG carries a methylation probability. [wally](https://github.com/tobiasrausch/wally) can plot this methylation information onto the alignments with its modified-base view. Each CpG is colored from blue (unmethylated) to red (methylated).
 
 ```bash
-bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf | grep -P "chr1\t789"
 wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.cram
 ```
 
@@ -169,6 +168,7 @@ bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf | 
 A typical example is the below ~2.3 Kbp insertion where the reference is mildly methylated but the inserted sequence is almost fully methylated.
 
 ```bash
+bcftools query -f "%CHROM\t%POS\t%INFO/SVTYPE\t%ID[\t%GT\t%MR\t%MA]\n" sv.bcf | grep -P "chr1\t789"
 wally region -m 5mC -cp -g genome.fa -r chr1:789000-790200:methylation tumor.cram
 ```
 
