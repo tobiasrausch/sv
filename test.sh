@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Run installation and pixi shell first
+## Run installation, pixi shell and pixi download first
 
 if [ -d data/lr/ ]
 then
