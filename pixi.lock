@@ -20,7 +20,7 @@ environments:
       - conda: https://conda.anaconda.org/bioconda/linux-64/bedtools-2.31.1-h13024bc_3.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/linux-64/bioconductor-dnacopy-1.80.0-r44h4d5c4aa_1.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/linux-64/clair3-2.0.2-py311hbc58adc_0.conda
-      - conda: https://conda.anaconda.org/bioconda/linux-64/cramino-1.3.0-h3dc2dae_0.conda
+      - conda: https://conda.anaconda.org/bioconda/linux-64/cramino-2.0.0-hef77e2b_0.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/delly-2.6.0-h3752d28_0.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/htslib-1.24-ha79157c_0.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/k8-1.2-he8db53b_6.tar.bz2
@@ -346,7 +346,7 @@ environments:
       - conda: https://conda.anaconda.org/bioconda/linux-64/bcftools-1.24-h118bc1c_2.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/bedtools-2.31.1-h13024bc_3.tar.bz2
       - conda: https://conda.anaconda.org/bioconda/linux-64/bioconductor-dnacopy-1.80.0-r44h4d5c4aa_1.tar.bz2
-      - conda: https://conda.anaconda.org/bioconda/linux-64/cramino-1.3.0-h3dc2dae_0.conda
+      - conda: https://conda.anaconda.org/bioconda/linux-64/cramino-2.0.0-hef77e2b_0.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/delly-2.6.0-h3752d28_0.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/htslib-1.24-ha79157c_0.conda
       - conda: https://conda.anaconda.org/bioconda/linux-64/k8-1.2-he8db53b_6.tar.bz2
@@ -709,23 +709,23 @@ packages:
     - clair3 >=2.0.2,<3.0a0
   size: 430698724
   timestamp: 1782365620350
-- conda: https://conda.anaconda.org/bioconda/linux-64/cramino-1.3.0-h3dc2dae_0.conda
-  sha256: cf85b9d86090d322d7f6962e33179f84b44ac19fbe54f44dde4791b82fd583dc
-  md5: 22cba82132ff3f27fa59522e130de91e
+- conda: https://conda.anaconda.org/bioconda/linux-64/cramino-2.0.0-hef77e2b_0.conda
+  sha256: c779e983fb9f9e165c9de6d28e84ab25e4d9e1da705cf0ae81bc030ca38fe98c
+  md5: b12236a3890343014951f7f8f88b7bb4
   depends:
-  - libgcc >=13
-  - libstdcxx >=13
-  - openssl >=3.6.0,<4.0a0
+  - __glibc >=2.17,<3.0.a0
+  - libgcc >=14
+  - libstdcxx >=14
+  - openssl >=3.5.8,<4.0a0
   constrains:
   - __glibc >=2.17
   license: MIT
   license_family: MIT
-  purls: []
   run_exports:
     weak:
-    - cramino >=1.3.0,<2.0a0
-  size: 4076596
-  timestamp: 1766784878653
+    - cramino >=2.0.0,<3.0a0
+  size: 4137717
+  timestamp: 1790248162103
 - conda: https://conda.anaconda.org/bioconda/linux-64/delly-2.6.0-h3752d28_0.conda
   sha256: 5e4753a41f61b1f820658fd8cdede379b5e1acbc7177c439380cff114ed8119f
   md5: 4de339805092d02ec8d8c9a2fda9bda5
@@ -1534,7 +1534,7 @@ packages:
   license: LGPL-3.0-or-later
   license_family: LGPL
   purls:
-  - pkg:pypi/gmpy2?source=compressed-mapping
+  - pkg:pypi/gmpy2?source=hash-mapping
   run_exports: {}
   size: 312441
   timestamp: 1787066347085
@@ -1596,7 +1596,7 @@ packages:
   license: BSD-3-Clause
   license_family: BSD
   purls:
-  - pkg:pypi/h5py?source=compressed-mapping
+  - pkg:pypi/h5py?source=hash-mapping
   run_exports: {}
   size: 1371667
   timestamp: 1787108752025
@@ -2679,7 +2679,7 @@ packages:
   license: BSD-3-Clause
   license_family: BSD
   purls:
-  - pkg:pypi/numpy?source=compressed-mapping
+  - pkg:pypi/numpy?source=hash-mapping
   run_exports:
     weak:
     - numpy >=1.25,<3
@@ -2834,7 +2834,7 @@ packages:
   license: BSD-3-Clause
   license_family: BSD
   purls:
-  - pkg:pypi/psutil?source=compressed-mapping
+  - pkg:pypi/psutil?source=hash-mapping
   run_exports: {}
   size: 231731
   timestamp: 1788189992233
@@ -3079,7 +3079,7 @@ packages:
   license: BSD-3-Clause
   license_family: BSD
   purls:
-  - pkg:pypi/pyzmq?source=compressed-mapping
+  - pkg:pypi/pyzmq?source=hash-mapping
   run_exports: {}
   size: 391713
   timestamp: 1787300895614
@@ -3098,7 +3098,7 @@ packages:
   license: BSD-3-Clause
   license_family: BSD
   purls:
-  - pkg:pypi/pyzmq?source=compressed-mapping
+  - pkg:pypi/pyzmq?source=hash-mapping
   run_exports: {}
   size: 214050
   timestamp: 1787300896477
@@ -3380,7 +3380,7 @@ packages:
   license: MIT
   license_family: MIT
   purls:
-  - pkg:pypi/rpds-py?source=compressed-mapping
+  - pkg:pypi/rpds-py?source=hash-mapping
   run_exports: {}
   size: 300752
   timestamp: 1788228344574
@@ -3508,7 +3508,7 @@ packages:
   license: Apache-2.0
   license_family: Apache
   purls:
-  - pkg:pypi/tornado?source=compressed-mapping
+  - pkg:pypi/tornado?source=hash-mapping
   run_exports: {}
   size: 868900
   timestamp: 1788524841516
@@ -3838,7 +3838,7 @@ packages:
   license: MIT
   license_family: MIT
   purls:
-  - pkg:pypi/anyio?source=compressed-mapping
+  - pkg:pypi/anyio?source=hash-mapping
   run_exports: {}
   size: 175295
   timestamp: 1788442098937
@@ -4120,7 +4120,7 @@ packages:
   - python >=3.10
   license: Unlicense
   purls:
-  - pkg:pypi/filelock?source=compressed-mapping
+  - pkg:pypi/filelock?source=hash-mapping
   run_exports: {}
   size: 78858
   timestamp: 1788217445739
@@ -5005,7 +5005,7 @@ packages:
   license: MIT
   license_family: MIT
   purls:
-  - pkg:pypi/platformdirs?source=compressed-mapping
+  - pkg:pypi/platformdirs?source=hash-mapping
   run_exports: {}
   size: 27515
   timestamp: 1788271419073
