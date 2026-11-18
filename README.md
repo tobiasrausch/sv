@@ -263,3 +263,6 @@ Rscript cnBafSV.R cnv.cov.gz svs.tsv var.vaf
 
 * For the somatic duplication, we have an estimated total copy-number of 3. What are the expected B-allele frequencies in that region?
 
+#### Credits
+
+The development of [Delly](https://github.com/dellytools/delly) and [GEAR](https://www.gear-genomics.com/) is partly funded by [de.NBI](https://www.denbi.de). Please help us improve by taking our short user survey for [delly](https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&tool=delly) and [GEAR](https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&tool=gear).
